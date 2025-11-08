@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación: Tecnología, Innovación y Competitividad</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome CDN (para iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* Estilos base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* bg-gray-100 */
+        }
+
+        /* Oculta las barras de scroll del contenedor de slides si es necesario */
+        #presentation-container {
+            overflow: hidden;
+        }
+
+        /* Estilo de la diapositiva (transición) */
+        .slide {
+            /* 
+            Dejaremos las transiciones fuera por ahora para asegurar compatibilidad 
+            y simplicidad, pero aquí es donde se podrían añadir.
+            La lógica de JS usará 'hidden' de Tailwind.
+            */
+            min-height: 70vh; /* Altura mínima para la diapositiva */
+        }
+
+        /* Estilos para cajas de contenido */
+        .idea-box {
+            background-color: #f0f9ff; /* bg-sky-50 */
+            border-left: 4px solid #0ea5e9; /* border-sky-500 */
+            padding: 1rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+            margin-bottom: 1.5rem;
+        }
+        .detail-box {
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb; /* border-gray-200 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        
+        .analogy-box {
+            background-color: #fafafa; /* bg-gray-50 */
+            border-left: 4px solid #6b7280; /* border-gray-500 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-style: italic;
+            margin-top: 1.5rem;
+        }
+
+        /* Estilo para lista personalizada */
+        .custom-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+        .custom-list li::before {
+            content: "✦";
+            position: absolute;
+            left: 0;
+            color: #22c55e; /* bg-green-500 */
+            font-size: 1.1rem;
+        }
+        
+        /* Estilo para el menú activo */
+        .menu-item.active {
+            background-color: #0ea5e9; /* bg-sky-500 */
+            color: white;
+        }
+        
+         /* Estilos para cajas de contenido principal */
+        .key-concept-box {
+            background-color: #f0f9ff; /* bg-sky-50 */
+            border-left: 5px solid #0ea5e9; /* border-sky-500 */
+            padding: 1.5rem;
+            border-radius: 0 0.75rem 0.75rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        /* Estilos de botones de navegación */
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.3);
+            color: white;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+            z-index: 20;
+        }
+        .nav-button:hover {
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+        .nav-button:disabled {
+            background-color: rgba(0, 0, 0, 0.1);
+            cursor: not-allowed;
+        }
+
+         /* Estilos específicos para el quiz */
+        .quiz-item {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+        }
+        .correct-answer {
+            color: #10b981; /* Verde esmeralda */
+            font-weight: 600;
+            margin-left: 1rem;
+        }
+        .quiz-option {
+            margin-left: 1.5rem;
+            font-size: 0.95rem;
+            color: #4b5563;
+        }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- 1. MENÚ DE NAVEGACIÓN SUPERIOR -->
+    <header class="bg-white shadow-md fixed top-0 left-0 right-0 z-30">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Título/Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="text-xl font-bold text-sky-600">Presentación</span>
+                </div>
+
+                <!-- Botón de Menú Móvil -->
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500">
+                        <span class="sr-only">Abrir menú</span>
+                        <i class="fas fa-bars fa-fw"></i>
+                    </button>
+                </div>
+
+                <!-- Menú Desktop -->
+                <div class="hidden md:flex md:items-center md:space-x-1">
+                    <a href="#" class="menu-item active px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100" data-slide="0">Inicio</a>
+                    <a href="#" class="menu-item px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100" data-slide="1">1. Tendencias</a>
+                    <a href="#" class="menu-item px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100" data-slide="2">2. Innovación</a>
+                    <a href="#" class="menu-item px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100" data-slide="3">3. Clientes</a>
+                    <a href="#" class="menu-item px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100" data-slide="4">4. Generaciones</a>
+                    <a href="#" class="menu-item px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100" data-slide="5">5. Ciclo de Vida</a>
+                    <a href="#" class="menu-item px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100" data-slide="6">6. Competitividad</a>
+                    <a href="#" class="menu-item px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100" data-slide="7">7. Quiz</a>
+                    <a href="#" class="menu-item px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100" data-slide="8">8. Actividad</a>
+                </div>
+            </div>
+            
+            <!-- Menú Desplegable Móvil -->
+            <div id="mobile-menu" class="hidden md:hidden absolute bg-white shadow-lg left-0 right-0">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#" class="menu-item active block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100" data-slide="0">Inicio</a>
+                    <a href="#" class="menu-item block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100" data-slide="1">1. Tendencias</a>
+                    <a href="#" class="menu-item block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100" data-slide="2">2. Innovación</a>
+                    <a href="#" class="menu-item block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100" data-slide="3">3. Clientes</a>
+                    <a href="#" class="menu-item block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100" data-slide="4">4. Generaciones</a>
+                    <a href="#" class="menu-item block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100" data-slide="5">5. Ciclo de Vida</a>
+                    <a href="#" class="menu-item block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100" data-slide="6">6. Competitividad</a>
+                    <a href="#" class="menu-item block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100" data-slide="7">7. Quiz</a>
+                    <a href="#" class="menu-item block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100" data-slide="8">8. Actividad</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 2. CONTENEDOR PRINCIPAL DE LA PRESENTACIÓN -->
+    <main class="flex-grow flex items-center justify-center py-24 px-4">
+        
+        <!-- El "Escenario" de la presentación -->
+        <div id="presentation-container" class="relative w-full max-w-5xl bg-white rounded-lg shadow-2xl">
+            
+            <!-- 
+            ***************************
+            INICIO DE LAS DIAPOSITIVAS
+            ***************************
+            Todas tienen la clase 'slide'.
+            La clase 'hidden' se añade o quita con JavaScript.
+            -->
+
+            <!-- Diapositiva 0: Título -->
+            <div class="slide p-8 md:p-16 flex flex-col items-center justify-center text-center">
+                <img src="unid.png" alt="" width="300"><br>
+                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800">
+                    TECNOLOGÍA, INNOVACIÓN Y COMPETITITVIDAD
+                </h1>
+                <p class="mt-4 text-2xl text-gray-500 font-medium">RESUMEN OPTIMIZADO</p>
+                <p class="mt-12 text-gray-500">M.T.I Sergio A. Panti Salvador</p>
+            </div>
+
+            <!-- Diapositiva 1: Tendencias -->
+            <div class="slide p-8 md:p-12 hidden">
+                <h2 class="text-3xl font-bold mb-6 text-sky-600 border-b-2 pb-3">
+                    1. Tendencias tecnológicas en las organizaciones
+                </h2>
+                
+                 <div class="key-concept-box border-red-500 bg-red-50">
+                     <p class="font-extrabold text-xl mb-2 text-red-900">Pregunta de primer principio:</p>
+                    <p class="text-lg text-sky-700">¿Por qué una empresa adopta una tecnología nueva?</p>
+                </div>
+
+                <div class="idea-box border-sky-700 bg-sky-100">
+                    <p class="font-bold text-xl mb-2 text-sky-900">Idea clave:</p>
+                    <p class="text-sky-800">Las tendencias son las olas del cambio que impulsan cómo operan las empresas. No se trata de moda, sino de adoptar herramientas que resuelven problemas o mejoran procesos.</p>
+                </div>
+
+                <h3 class="text-2xl font-bold mt-8 mb-4 text-gray-800">Ejemplos de tendencias:</h3>
+                <ul class="space-y-4 text-gray-700 custom-list">
+                    <li>
+                        <strong class="text-sky-600">Inteligencia Artificial (IA):</strong> Automatiza tareas y mejora decisiones (atención al cliente con chatbots, análisis de datos).
+                    </li>
+                    <li>
+                        <strong class="text-sky-600">Big Data:</strong> Convierte montañas de datos en estrategias.
+                    </li>
+                    <li>
+                        <strong class="text-sky-600">Computación en la Nube:</strong> Reduce costos y mejora el acceso. Es flexible y escalable.
+                    </li>
+                    <li>
+                        <strong class="text-sky-600">Trabajo Híbrido/Remoto:</strong> La oficina ya no es un lugar, sino una conexión. Tecnologías de colaboración.
+                    </li>
+                </ul>
+
+                <div class="detail-box border-l-4 border-gray-400 mt-8">
+                    <p class="font-semibold text-gray-800">Analogía:</p>
+                    <p class="text-sm italic text-gray-700">Imagina que tu empresa es un coche. Las tendencias tecnológicas son las mejoras: un motor más eficiente (IA), un GPS (Análisis de Datos), y un sistema de seguridad (Ciberseguridad). Las añades para que el coche sea más rápido y seguro.</p>
+                </div>
+            </div>
+
+            <!-- Diapositiva 2: Innovación -->
+            <div class="slide p-8 md:p-12 hidden">
+                <h2 class="text-3xl font-bold mb-6 text-sky-600 border-b-2 pb-3">
+                    2. Innovación tecnológica como estrategia
+                </h2>
+
+                <div class="idea-box border-sky-700 bg-sky-100">
+                    <p class="font-bold text-xl mb-2 text-sky-900">Idea clave:</p>
+                    <p class="text-sky-800">Innovar no es inventar por gusto, es hacer que la tecnología trabaje a favor del negocio, buscando soluciones nuevas a problemas reales.</p>
+                </div>
+
+                <h3 class="text-2xl font-bold mt-8 mb-4 text-gray-800">Tipos de innovación tecnológica:</h3>
+                  <ul class="custom-list space-y-3 text-lg text-gray-700">
+                    <li>
+                        <strong class="text-red-600">De Producto:</strong> Crear o mejorar lo que se ofrece (ej. Netflix vs. Blockbuster).
+                    </li>
+                    <li>
+                        <strong class="text-red-600">De Proceso:</strong> Mejorar cómo se hace algo (automatizar una fábrica).
+                    </li>
+                    <li>
+                        <strong class="text-red-600">De Modelo de Negocio:</strong> Cambiar la forma de generar ingresos (Uber, Airbnb).
+                    </li>
+                </ul>
+
+                 <div class="detail-box border-l-4 border-red-500 mt-8">
+                    <p class="font-semibold text-red-800">🚀 Analogía tipo Elon Musk:</p>
+                    <p class="text-sm italic text-gray-700">Imagina que tienes una empresa que fabrica sillas. Todos usan madera. Tú te preguntas: “¿Realmente necesito madera… o solo necesito algo que mantenga a una persona suspendida?” De ahí nace el metal, el plástico, la impresión 3D. **Innovar no es cambiar el material, es romper la suposición inicial.**</p>
+                    <p class="mt-4 font-bold text-sm text-red-700">Estrategia empresarial = preguntarte constantemente:”</p>
+                    <p class="mt-4 font-bold text-sm text-red-700">“¿Qué parte del negocio puedo volver obsoleta antes que mi competencia lo haga?”</p>
+                </div>
+
+            </div>
+            
+            <!-- Diapositiva 3: Clientes -->
+            <div class="slide p-8 md:p-12 hidden">
+                <h2 class="text-3xl font-bold mb-6 text-sky-600 border-b-2 pb-3">
+                    3. Expectativa y satisfacción de los clientes
+                </h2>
+
+                <div class="idea-box">
+                    <p class="font-semibold text-xl mb-2 text-sky-800">Primer principio:</p>
+                    <p class="text-lg text-sky-700">La satisfacción no depende del producto, sino de la distancia entre lo que el cliente espera y lo que recibe.</p>
+                    <p class="text-red-600 font-bold mt-2">📉 Si entregas menos → decepción.</p>
+                    <p class="text-green-600 font-bold">📈 Si entregas más → sorpresa.</p>
+                </div>
+
+                <div class="idea-box border-purple-500 bg-purple-50">
+                    <p class="font-bold text-xl mb-2 text-purple-900">Idea clave:</p>
+                    <p class="text-purple-800">El cliente ya no compra un producto, compra una experiencia. La tecnología ha creado clientes “Hiperinformados” con poca paciencia. La satisfacción es que la experiencia sea fácil, rápida y personalizada.</p>
+                </div>
+
+               <h3 class="text-2xl font-bold mt-8 mb-4 text-gray-800">Claves en la Era del Cliente Hiperinformado:</h3>
+                <ul class="custom-list space-y-3 text-lg text-gray-700">
+                    <li>
+                        <strong class="text-purple-600">Experiencia:</strong> Escucha al cliente con datos: Cumplir expectativas te mantiene; superarlas te vuelve memorable.
+                    </li>
+                    <li>
+                        <strong class="text-purple-600">Tecnología:</strong> Ha creado clientes con poca paciencia. La satisfacción ya no es “que funciona”, es que la experiencia sea fácil, rápida y personalizada (IA, CRM).
+                    </li>
+                    <li>
+                        <strong class="text-purple-600">Expectativa vs. Satisfacción:</strong> La expectativa (envíos 24h, apps intuitivas) ha sido elevada muy alto por empresas como Amazon/Uber. La satisfacción es el resultado de cumplir o superar esa expectativa.
+                    </li>
+                </ul>
+
+                <div class="detail-box border-l-4 border-gray-400 mt-8">
+                    <p class="font-semibold text-gray-800">Analogía:</p>
+                    <p class="text-sm italic text-gray-600">Ir a un restaurante. Antes, la expectativa era que la comida estuviera buena. Hoy, también esperas poder reservar online, ver el menú en tu móvil, pagar con tarjeta sin moverte de la mesa y que te recuerden tus alergias. La satisfacción surge cuando todo ese "viaje" fluye sin problemas.</p>
+                </div>
+            </div>
+
+            <!-- Diapositiva 4: Generaciones -->
+            <div class="slide p-8 md:p-12 hidden">
+                <h2 class="text-3xl font-bold mb-6 text-sky-600 border-b-2 pb-3">
+                    4. Hábitos de consumo generacionales
+                </h2>
+                
+                 <div class="key-concept-box border-red-500 bg-red-50">
+                     <p class="font-extrabold text-xl mb-2 text-red-900">Pregunta de primer principio:</p>
+                    <p class="text-lg text-sky-700">¿Por qué diferentes generaciones consumen de formas distintas, si todos somos humanos?</p>
+                </div>
+
+                <div class="idea-box border-indigo-500 bg-indigo-50">
+                    <p class="font-bold text-xl mb-2 text-indigo-900">Idea clave:</p>
+                    <p class="text-indigo-800">Cada generación compra, confía y decide de forma distinta. La tecnología no solo cambia lo que se vende, sino cómo y a quién se vende.</p>
+                </div>
+
+                <h3 class="text-2xl font-semibold mt-6 mb-4 text-gray-700">Ejemplos:</h3>
+                <ul class="custom-list space-y-4 text-gray-700">
+                    <li>
+                        <strong class="text-indigo-600">Baby Boomer (60+):</strong> Valoran la atención telefónica, el email y la seguridad. Compran **"el objeto"**. La tecnología es una herramienta.
+                    </li>
+                    <li>
+                        <strong class="text-indigo-600">Millennials (25-40):</strong> Valoran experiencias (autogestión) y propósito social. Nacieron con el "modem". Compran **"la función"**. La tecnología es una *extensión*.
+                    </li>
+                    <li>
+                        <strong class="text-indigo-600">Generación Z (18-25):</strong> Buscan inmediatez, redes sociales y autenticidad. Valoran el acceso sobre la propiedad. Compran una entrada a una tribu o un estado de ser. La tecnología es el **ecosistema**.
+                    </li>
+                </ul>
+
+                <div class="detail-box border-l-4 border-gray-400 mt-8">
+                    <p class="font-semibold text-gray-800">Analogía - Vender Música:</p>
+                    <p class="text-sm italic text-gray-700">A los **Baby Boomers** les vendes un vinilo o un CD (físico). A los **Millennials** les vendes un acceso en Spotify (acceso ilimitado). A la **Generación Z** no le "vendes" música, interactúas con ellos a través de un reto de baile en TikTok donde usan tu canción (experiencia e integración).</p>
+                </div>
+            </div>
+
+            <!-- Diapositiva 5: Ciclo de Vida -->
+            <div class="slide p-8 md:p-12 hidden">
+                <h2 class="text-3xl font-bold mb-6 text-sky-600 border-b-2 pb-3">
+                    5. Trayectoria tecnológica y ciclo de vida
+                </h2>
+                
+                <div class="idea-box border-yellow-500 bg-yellow-50">
+                    <p class="font-bold text-xl mb-2 text-yellow-900">Idea clave:</p>
+                    <p class="text-yellow-800">Toda empresa pasa por etapas: nace, crece, madura y puede envejecer si no se renueva. La clave de la longevidad es adaptarse a los cambios tecnológicos.</p>
+                </div>
+
+               <h3 class="text-2xl font-bold mt-8 mb-4 text-gray-800">Ciclo de Vida de una Empresa:</h3>
+                <ol class="list-decimal pl-5 space-y-3 text-lg text-gray-700">
+                    <li>
+                        <strong class="text-yellow-600">Introducción:</strong> Startup con una idea innovadora.
+                    </li>
+                    <li>
+                        <strong class="text-yellow-600">Crecimiento:</strong> Adopción masiva, se escala rápidamente.
+                    </li>
+                    <li>
+                        <strong class="text-yellow-600">Madurez:</strong> Crecimiento estable, el mercado se satura.
+                    </li>
+                    <li>
+                        <strong class="text-yellow-600">Declive:</strong> La empresa se vuelve irrelevante si no se renueva.
+                    </li>
+                </ol>
+
+                <h3 class="text-2xl font-bold mt-8 mb-4 text-gray-800">Etapas de la Innovación:</h3>
+                <ul class="custom-list space-y-3 text-lg text-gray-700">
+                    <li>Adopción (experimenta).</li>
+                    <li>Implementación (integra).</li>
+                    <li>Consolidación (obtiene resultados).</li>
+                    <li>Obsolescencia (se queda atrás si no innova).</li>
+                </ul>
+                
+                <div class="detail-box border-l-4 border-gray-400 mt-8">
+                    <p class="font-semibold text-gray-800">Analogía:</p>
+                    <p class="text-sm italic text-gray-700">Es como surfear. Cada **ola es una tecnología** (PC, Internet, Móvil, IA). Una empresa en **madurez** debe remar rápidamente para alcanzar la **siguiente ola** (nueva tecnología) antes de hundirse. La que se queda quieta, declina.</p>
+                </div>
+            </div>
+            
+            <!-- Diapositiva 6: Competitividad -->
+            <div class="slide p-8 md:p-12 hidden">
+                <h2 class="text-3xl font-bold mb-6 text-sky-600 border-b-2 pb-3">
+                    6. Competitividad en un mundo globalizado
+                </h2>
+                
+                <div class="idea-box border-green-500 bg-green-50">
+                    <p class="font-bold text-xl mb-2 text-green-900">Idea clave:</p>
+                    <p class="text-green-800">Competir hoy no es solo tener un buen producto, sino mejorar continuamente y adaptarse más rápido que el resto.</p>
+                </div>
+
+               <h3 class="text-2xl font-bold mt-8 mb-4 text-gray-800">Habilidades Clave para la Competitividad:</h3>
+                <ul class="custom-list space-y-3 text-lg text-gray-700">
+                    <li>Adaptación al cambio.</li>
+                    <li>Trabajo colaborativo y digital.</li>
+                    <li>Innovación constante.</li>
+                    <li>Uso inteligente de datos.</li>
+                    <li>Comunicación global.</li>
+                </ul>
+
+               <div class="detail-box border-l-4 border-green-500 mt-8">
+                    <p class="font-semibold text-green-800">La Globalización y la Competencia:</p>
+                    <p class="text-lg text-gray-700">La globalización destruyó las ventajas locales. Ya no compites con la empresa de al lado, sino con una startup en Singapur que trabaja mientras tú duermes.</p>
+                    <p class="mt-4 font-semibold text-sm italic text-gray-600">Analogía: En el mundo global, la competencia no está al otro lado de la calle… está a un clic de distancia.</p>
+                </div>
+            </div>
+
+            <!-- Diapositiva 7: Quiz -->
+            <div class="slide p-8 md:p-12 hidden">
+                <h2 class="text-3xl font-bold mb-6 text-yellow-600 border-b-2 pb-3">
+                    🧠 7. TEST DE REPASO RÁPIDO
+                </h2>
+                
+                   <div class="space-y-6 text-gray-800">
+                    <!-- Pregunta 1 -->
+                    <div class="quiz-item">
+                        <strong class="text-lg">1. ¿Qué sucede con una empresa que ignora las tendencias tecnológicas?</strong>
+                       </div>
+                    <!-- Pregunta 2 -->
+                    <div class="quiz-item">
+                        <strong class="text-lg">2. Innovar tecnológicamente implica:</strong>
+                        
+                    </div>
+                    <!-- Pregunta 3 -->
+                    <div class="quiz-item">
+                        <strong class="text-lg">3. ¿Qué busca el cliente actual además del producto?</strong>
+                   </div>
+                    <!-- Pregunta 4 -->
+                    <div class="quiz-item">
+                        <strong class="text-lg">4. La principal razón por la que las expectativas de los clientes son más altas que nunca es:</strong>
+                      </div>
+                    <!-- Pregunta 5 -->
+                    <div class="quiz-item">
+                        <strong class="text-lg">5. ¿Qué diferencia a un millennial de la Gen Z como consumidor?</strong>
+                        
+                    </div>
+                    <!-- Pregunta 6 -->
+                    <div class="quiz-item">
+                        <strong class="text-lg">6. Si una empresa no actualiza su tecnología, entra en…</strong>
+                       
+                    </div>
+                    <!-- Pregunta 7 -->
+                    <div class="quiz-item">
+                        <strong class="text-lg">7. La competitividad actual se basa en…</strong>
+                       
+                    </div>
+                </div>
+                
+            </div>
+
+            <!-- Diapositiva 8: Actividad -->
+            <div class="slide p-8 md:p-12 hidden">
+                <h2 class="text-3xl font-bold mb-6 text-green-600 border-b-2 pb-3">
+                    🎯 8. ACTIVIDAD EN EQUIPOS
+                </h2>
+                
+                <div class="text-lg text-green-900 bg-green-50 p-4 rounded-lg">
+                    <p><strong class="font-bold">Objetivo:</strong> Aplicar los conceptos de tendencias, innovación y competitividad.</p>
+                    <p class="mt-1"><strong class="font-bold">Equipos:</strong> de 4 a 6 personas</p>
+                </div>
+                
+                <h4 class="text-xl font-semibold mt-6 mb-3 text-gray-700">Asignación de reto (ejemplos):</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4 text-sm">
+                    <div class="bg-gray-100 border border-dashed border-sky-400 p-3 rounded-lg">Una empresa de taxis locales pierde clientes frente a apps.</div>
+                    <div class="bg-gray-100 border border-dashed border-sky-400 p-3 rounded-lg">Una tienda de ropa tradicional quiere atraer a clientes jóvenes.</div>
+                    <div class="bg-gray-100 border border-dashed border-sky-400 p-3 rounded-lg">Una empresa de alimentos busca mejorar su relación con clientes, sus ventas están cayendo frente a las nuevas franquicias..</div>
+                    <div class="bg-gray-100 border border-dashed border-sky-400 p-3 rounded-lg">Una agencia de viajes que vende paquetes turísticos impresos en folletos y solo por teléfono.</div>
+                </div>
+
+               <div class="grid md:grid-cols-2 gap-6">
+                   
+                    <div>
+                        <strong class="text-xl text-purple-600 block mb-2">Misión del Equipo (Pasos):</strong>
+                        <ol class="list-decimal pl-5 text-base space-y-2 text-gray-700">
+                            <li><strong class="text-red-600">Adopción Tecnológica:</strong>Detectar qué tendencia tecnológica podrían usar y proponer innovación tecnológica.</li>
+                            <li><strong class="text-red-600">Enfoque Generacional:</strong> Seleccionar una generación y/o nuevo nicho de mercado al que se dirigirán y cómo.</li>
+                            <li><strong class="text-red-600">Impacto:</strong>Explicar cómo impactaría en la satisfacción del cliente y la competitividad.</li>
+                            <li><strong class="text-red-600">Eslogan:</strong> Crear un eslogan de la nueva estrategia.</li>
+                        </ol>
+                    </div>
+                     <div>
+                        <strong class="text-xl text-purple-600 block mb-2">Presentación:</strong>
+                        <ul class="custom-list pl-5 text-base space-y-2 text-gray-700">
+                            <li>Mini pitch de 2 minutos.</li>
+                              <li>Mapa visual (en rotafolio o digital).</li>
+                                <li>Storyboard corto (tipo “antes/después”).</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <p class="font-semibold mt-4 mb-2">Retroalimentación (Votación):</p>
+                    <p class="text-sm">Los demás equipos votan y debatirán por la propuesta que consideren:</p>
+                    <p class="text-sm">💡 Más innovadora</p>
+                    <p class="text-sm">💬 Más convincente.</p>
+                    <p class="text-sm">🚀 Más aplicable a la realidad.</p>
+                </div>
+            </div>
+            
+            <!-- 
+            ***************************
+            FIN DE LAS DIAPOSITIVAS
+            ***************************
+            -->
+
+            <!-- 3. BOTONES DE NAVEGACIÓN (Anterior / Siguiente) -->
+            <button id="prev-btn" class="nav-button left-4">
+                <i class="fas fa-chevron-left fa-fw"></i>
+            </button>
+            <button id="next-btn" class="nav-button right-4">
+                <i class="fas fa-chevron-right fa-fw"></i>
+            </button>
+
+        </div>
+    </main>
+
+    <!-- 4. SCRIPT DE JAVASCRIPT PARA LA NAVEGACIÓN -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- VARIABLES ---
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.slide');
+            const menuItems = document.querySelectorAll('.menu-item');
+            const totalSlides = slides.length;
+            
+            const prevButton = document.getElementById('prev-btn');
+            const nextButton = document.getElementById('next-btn');
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            // --- FUNCIONES ---
+            
+            /** Muestra la diapositiva por su índice */
+            function showSlide(index) {
+                // 1. Ocultar todas las diapositivas
+                slides.forEach((slide) => {
+                    slide.classList.add('hidden');
+                });
+                
+                // 2. Mostrar la diapositiva actual
+                if (slides[index]) {
+                    slides[index].classList.remove('hidden');
+                }
+                
+                // 3. Actualizar el estado del menú
+                menuItems.forEach((item, itemIndex) => {
+                    if (item.dataset.slide == index) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                });
+                
+                // 4. Actualizar estado de botones
+                prevButton.disabled = (index === 0);
+                nextButton.disabled = (index === totalSlides - 1);
+                
+                // 5. Ocultar menú móvil (si está abierto)
+                mobileMenu.classList.add('hidden');
+                
+                // 6. Actualizar el índice actual
+                currentSlide = index;
+            }
+
+            /** Ir a la siguiente diapositiva */
+            function nextSlide() {
+                if (currentSlide < totalSlides - 1) {
+                    showSlide(currentSlide + 1);
+                }
+            }
+
+            /** Ir a la diapositiva anterior */
+            function prevSlide() {
+                if (currentSlide > 0) {
+                    showSlide(currentSlide - 1);
+                }
+            }
+            
+            /** Ir a una diapositiva específica (usado por el menú) */
+            function goToSlide(index) {
+                showSlide(index);
+            }
+
+            // --- EVENT LISTENERS ---
+            
+            // 1. Botones Siguiente/Anterior
+            nextButton.addEventListener('click', nextSlide);
+            prevButton.addEventListener('click', prevSlide);
+
+            // 2. Navegación por teclado (Flechas)
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    nextSlide();
+                } else if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                }
+            });
+
+            // 3. Clics en el Menú (Desktop y Móvil)
+            menuItems.forEach((item) => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const slideIndex = parseInt(item.dataset.slide, 10);
+                    goToSlide(slideIndex);
+                });
+            });
+
+            // 4. Botón de Menú Móvil
+            menuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // --- INICIALIZACIÓN ---
+            showSlide(0); // Mostrar la primera diapositiva al cargar
+        });
+    </script>
+
+</body>
+</html>
